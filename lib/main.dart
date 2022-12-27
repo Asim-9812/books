@@ -1,21 +1,65 @@
-import 'package:sampleflutter/models/bank.dart';
-import 'package:sampleflutter/models/cars.dart';
-import 'package:sampleflutter/models/inheritance.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:sampleflutter/view/Homepage.dart';
 
 
-extension adding on List<int>{
+void main(){
 
-  int total (){
-    return this.reduce((value, element) => value + element);
+
+  runApp(Home());
+
+}
+
+class Home extends StatelessWidget{
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: HomePage(),
+    //
+    //   theme: ThemeData().copyWith(
+    //     buttonTheme: ButtonThemeData().copyWith(
+    //       buttonColor: Colors.pink
+    //     ),
+    //         backgroundColor: Colors.green,
+    //   ),
+    //
+    );
   }
 
 }
 
 
-void main(){
 
-  List<int> some=[11,22,33,44];
-  print(some.total());
+
+
+
+
+
+
+
+
+
+
+// import 'package:sampleflutter/models/bank.dart';
+// import 'package:sampleflutter/models/cars.dart';
+// import 'package:sampleflutter/models/inheritance.dart';
+//
+//
+// extension adding on List<int>{
+//
+//   int total (){
+//     return this.reduce((value, element) => value + element);
+//   }
+//
+// }
+//
+//
+// void main(){
+//
+//   List<int> some=[11,22,33,44];
+//   print(some.total());
 
 
   // final sometxt = 'hello';
@@ -63,4 +107,4 @@ void main(){
   // cat1.sit();
 
 
-}
+//}

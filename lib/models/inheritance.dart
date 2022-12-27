@@ -1,26 +1,26 @@
 
-
-abstract class DataCall<T>{
-  T getData();
-}
-
-class k implements DataCall{
-  @override
-  int getData() {
-    // TODO: implement getData
-    throw UnimplementedError();
-  }
-
-}
-
-class m implements DataCall{
-  @override
-  String getData() {
-    // TODO: implement getData
-    throw UnimplementedError();
-  }
-
-}
+//
+// abstract class DataCall<T>{
+//   T getData();
+// }
+//
+// class k implements DataCall{
+//   @override
+//   int getData() {
+//     // TODO: implement getData
+//     throw UnimplementedError();
+//   }
+//
+// }
+//
+// class m implements DataCall{
+//   @override
+//   String getData() {
+//     // TODO: implement getData
+//     throw UnimplementedError();
+//   }
+//
+// }
 
 
 // mixin running{
