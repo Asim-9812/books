@@ -34,3 +34,10 @@ List<Book> books=[
       rating: '⭐⭐⭐⭐⭐',
       genres: 'Stoicism'),
 ];
+
+final readingbooks = Book(
+      title: 'Beyond Good and Evil',
+      detail: 'Beyond Good and Evil confirmed Nietzsche\'s position as the towering European philosopher of his age. The work dramatically rejects the tradition of Western thought with its notions of truth and God, good and evil.',
+      imageUrl: 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1388607391l/12321.jpg',
+      rating: '⭐⭐⭐⭐⭐',
+      genres: 'Existensialism');
