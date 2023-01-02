@@ -1,9 +1,9 @@
-import 'package:flutter/cupertino.dart';
+// import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sampleflutter/view/Tab%20Bar%20Contents/For%20You%20Page.dart';
 
-import '../../models/book.dart';
+// import '../../models/book.dart';
 
 class DefaultPage extends StatefulWidget {
   const DefaultPage({Key? key}) : super(key: key);
@@ -93,7 +93,7 @@ class _DefaultPageState extends State<DefaultPage> with TickerProviderStateMixin
           // TAB BAR CONTENTS
           Container(
             // width: (width*0.33).w,
-            height: height*0.564,
+            height: height*0.56,
             margin: EdgeInsets.only(left: 10),
             child: TabBarView(
                 controller: _tabController,

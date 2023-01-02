@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:sampleflutter/view/Homepage.dart';
+import 'package:get/get.dart';
+import 'package:sampleflutter/providers/counter_provider.dart';
+// import 'package:sampleflutter/view/Homepage.dart';
 
 
 void main(){
 
 
-  runApp(Home());
+  runApp(ProviderScope(child: Home()));
 
 }
 
@@ -20,12 +23,78 @@ class Home extends StatelessWidget {
       minTextAdapt: true,
       splitScreenMode: true,
       builder: (context, child) {
-        return MaterialApp(
+        return GetMaterialApp(
           debugShowCheckedModeBanner: false,
           home: child,
         );
       },
-      child: HomePage(),
+      child: Count(),
     );
   }
+}
+
+
+class Count extends StatelessWidget {
+
+//
+//   @override
+//   State<Count> createState() => _CountState();
+// }
+//
+// class _CountState extends State<Count> {
+//
+//   //variable declare here/function
+//   int number = 0;
+//
+//   void addNumber(){
+//     setState(() {
+//       number++;
+//     });
+//   }
+//   void minusNumber(){
+//     setState(() {
+//       number--;
+//     });
+//   }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: SafeArea(
+        child: Consumer(
+          builder: (context,ref,child) {
+            final number = ref.watch(counterProvider).number;
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text('${number}', style: TextStyle(fontSize: 50.sp),),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ElevatedButton(
+                        onPressed: () {
+                         ref.read(counterProvider).addNumber();
+                        },
+                        child: Text('add')
+                    ),
+                    SizedBox(width: 20.w,),
+                    ElevatedButton(
+                        onPressed: () {
+                          ref.read(counterProvider).minusNumber();
+                        },
+                        child: Text('minus')
+                    )
+
+                  ],
+                )
+
+              ],
+            );
+          }
+        ),
+      )
+    );
+  }
+
+  //function
 }
