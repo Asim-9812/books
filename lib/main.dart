@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:sampleflutter/providers/counter_provider.dart';
+import 'package:sampleflutter/view/todo_hompage.dart';
 // import 'package:sampleflutter/view/Homepage.dart';
 
 
@@ -28,7 +29,7 @@ class Home extends StatelessWidget {
           home: child,
         );
       },
-      child: Count(),
+      child: TodoHomePage(),
     );
   }
 }
@@ -59,41 +60,59 @@ class Count extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
-      body: SafeArea(
-        child: Consumer(
-          builder: (context,ref,child) {
-            final number = ref.watch(counterProvider).number;
-            return Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text('${number}', style: TextStyle(fontSize: 50.sp),),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    ElevatedButton(
-                        onPressed: () {
-                         ref.read(counterProvider).addNumber();
-                        },
-                        child: Text('add')
-                    ),
-                    SizedBox(width: 20.w,),
-                    ElevatedButton(
-                        onPressed: () {
-                          ref.read(counterProvider).minusNumber();
-                        },
-                        child: Text('minus')
-                    )
 
-                  ],
-                )
 
-              ],
-            );
-          }
-        ),
-      )
+
     );
+
+
+
+
+
+
+
+
+    // return Scaffold(
+    //   body: SafeArea(
+    //     child: Consumer(
+    //       builder: (context,ref,child) {
+    //         final number = ref.watch(countStateProvider);
+    //         return Column(
+    //           mainAxisAlignment: MainAxisAlignment.center,
+    //           children: [
+    //             Text('${number}', style: TextStyle(fontSize: 50.sp),),
+    //             Row(
+    //               mainAxisAlignment: MainAxisAlignment.center,
+    //               children: [
+    //                 ElevatedButton(
+    //                     onPressed: () {
+    //                      // ref.read(counterProvider).addNumber();
+    //                       ref.read(countStateProvider.notifier).state++;
+    //                     },
+    //                     child: Text('add')
+    //                 ),
+    //                 SizedBox(width: 20.w,),
+    //                 ElevatedButton(
+    //                     onPressed: () {
+    //                       // ref.read(counterProvider).minusNumber();
+    //                       ref.read(countStateProvider.notifier).state--;
+    //
+    //                     },
+    //
+    //                     child: Text('minus')
+    //                 )
+    //
+    //               ],
+    //             )
+    //
+    //           ],
+    //         );
+    //       }
+    //     ),
+    //   )
+    // );
   }
 
   //function
