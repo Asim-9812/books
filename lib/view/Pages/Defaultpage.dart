@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sampleflutter/view/Tab%20Bar%20Contents/For%20You%20Page.dart';
+import 'package:sampleflutter/view/Tab%20Bar%20Contents/popular.dart';
 
 import '../../models/book.dart';
 
@@ -91,16 +92,13 @@ class _DefaultPageState extends State<DefaultPage> with TickerProviderStateMixin
           SizedBox(height: 10.h,),
 
           // TAB BAR CONTENTS
-          Container(
-            // width: (width*0.33).w,
-            height: height*0.564,
-            margin: EdgeInsets.only(left: 10),
+          Expanded(
             child: TabBarView(
                 controller: _tabController,
                 children: [
                   // SCROLLING CONTAINER
                   FYP(),
-                  Text('two'),
+                  Popular(),
                   Text('three'),
                   Text('four'),
 
