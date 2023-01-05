@@ -1,10 +1,10 @@
-
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-
+import 'package:get/get_core/src/get_main.dart';
+import 'package:intl/intl.dart';
+// import 'package:flutter_screenutil/flutter_screenutil.dart';
+// import 'package:get/get.dart';
 import '../models/todo.dart';
 import '../providers/todo_provider.dart';
 
@@ -59,13 +59,18 @@ class TodoHomePage extends ConsumerWidget {
                     child: ListView.builder(
                         itemCount: todoData.length,
                         itemBuilder: (context, index){
+                          DateTime now = DateTime.parse(todoData[index].dateTime);
+                          String formattedDate = DateFormat('yyyy-MM-dd – kk:mm').format(now);
                           final todo = todoData[index];
                           return Padding(
                             padding: const EdgeInsets.symmetric(vertical: 8.0),
                             child: ListTile(
-                              leading: Icon(Icons.add_business_rounded),
+                              leading: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Icon(Icons.playlist_add_check_outlined),
+                              ),
                               title: Text(todo.todo),
-                              subtitle: Text(todo.dateTime),
+                              subtitle: Text(formattedDate),
                               trailing: Row(
                                   mainAxisSize: MainAxisSize.min,
                                 children: [
@@ -86,7 +91,7 @@ class TodoHomePage extends ConsumerWidget {
                                                     key: _formKey,
                                                     child: TextFormField(
                                                       // controller to create and store the  value
-                                                      controller: todoController2,
+                                                      controller: todoController2..text=todo.todo,
 
                                                       //validator to define and use the value later on....
                                                       validator: (val2){
@@ -103,7 +108,7 @@ class TodoHomePage extends ConsumerWidget {
                                                         focusedBorder: InputBorder.none,
                                                         fillColor: Colors.white,
                                                         filled: true,
-                                                        hintText: '...',
+                                                        // hintText: '...',
                                                       ),
                                                     ),
                                                   ),
@@ -123,7 +128,7 @@ class TodoHomePage extends ConsumerWidget {
 
 
                                                           }
-                                                          todoController.clear();
+                                                          // todoController2.clear();
                                                           Navigator.pop(context);
 
                                                         }
@@ -155,8 +160,29 @@ class TodoHomePage extends ConsumerWidget {
                                     ),
                                       onPressed: () {
 
+                                      Get.defaultDialog(
 
-                                        ref.read(todoProvider.notifier).removeTodo(todo);
+                                        title: 'Delete',
+
+
+                                        content: Text('Are you sure?'),
+
+                                        actions: [
+                                          TextButton(onPressed: (){
+                                            Navigator.of(context).pop();
+                                            ref.read(todoProvider.notifier).removeTodo(todo);
+
+                                          }, child: Text('YES')),
+                                          TextButton(onPressed: (){
+                                            Navigator.of(context).pop();
+                                          }, child: Text('NO'))
+                                        ]
+
+
+                                      );
+
+
+
                                       },
                                       child: Icon(Icons.delete)),
 
