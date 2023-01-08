@@ -7,16 +7,9 @@ import 'package:sampleflutter/constant/colors.dart';
 
 import '../../models/book.dart';
 
-class Popular extends StatefulWidget {
+class Popular extends StatelessWidget {
 
   
-  @override
-  State<Popular> createState() => _PopularState();
-}
-
-class _PopularState extends State<Popular> {
-
-
   @override
   Widget build(BuildContext context) {
     return ListView.builder(

@@ -1,10 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:sampleflutter/constant/colors.dart';
 import 'package:sampleflutter/view/Tab%20Bar%20Contents/For%20You%20Page.dart';
+import 'package:sampleflutter/view/Tab%20Bar%20Contents/feedpage.dart';
 import 'package:sampleflutter/view/Tab%20Bar%20Contents/popular.dart';
 
 import '../../models/book.dart';
+import '../Tab Bar Contents/top_rated.dart';
 
 class DefaultPage extends StatefulWidget {
   const DefaultPage({Key? key}) : super(key: key);
@@ -29,7 +32,7 @@ class _DefaultPageState extends State<DefaultPage> with TickerProviderStateMixin
       appBar: AppBar(
         backgroundColor: Colors.black,
         // elevation: 20,
-        title: Text('Philosopher\'s Journal',style: TextStyle(color: Color(0xFFFEBC879),fontWeight: FontWeight.bold,fontSize: 20.sp),),
+        title: Text('Philosopher\'s Journal',style: TextStyle(color: primary,fontWeight: FontWeight.bold,fontSize: 20.sp),),
         // toolbarHeight: 200,
 
         //for placing the  objects  from the right side of the screen
@@ -77,7 +80,7 @@ class _DefaultPageState extends State<DefaultPage> with TickerProviderStateMixin
                   labelPadding: EdgeInsets.only(left: 5.w, right: 40.w),
                   labelColor: Color(0xFFFEBC879),
                   unselectedLabelColor: Colors.white30,
-                  indicatorColor: Colors.transparent,
+                  indicatorColor: primary,
                   tabs:[
                     Tab(text: 'For You',),
                     Tab(text: 'Popular'),
@@ -99,8 +102,8 @@ class _DefaultPageState extends State<DefaultPage> with TickerProviderStateMixin
                   // SCROLLING CONTAINER
                   FYP(),
                   Popular(),
-                  Text('three'),
-                  Text('four'),
+                  Top_rated(),
+                  FeedPage(),
 
 
                 ]
