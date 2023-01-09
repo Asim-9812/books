@@ -53,7 +53,7 @@ class FeedPage extends ConsumerWidget{
                            height: 50.h,
                            width: 300.w,
                            child: TextFormField(
-
+                             style: TextStyle(color: Colors.white),
                              controller: feedController,
                              validator: (val){
                                if (val!.isEmpty){
@@ -124,28 +124,88 @@ class FeedPage extends ConsumerWidget{
                          color: secondary,
                          child: Column(
                            children: [
-                             ListTile(
-                               leading: Icon(Icons.person_pin_outlined,size: 40.h,color: primary,),
-                               title: Column(
-                                 crossAxisAlignment: CrossAxisAlignment.start,
-                                 children: [
-                                   Padding(
-                                     padding: const EdgeInsets.only(top: 8.0,left: 8.0),
-                                     child: Row(
-                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                       children: [
-                                         Text('User',style: TextStyle(color: primary,fontWeight: FontWeight.bold,fontSize: 25.sp)),
-                                         Text(formattedDate,style: TextStyle(color: primary))
-                                       ],
-                                     ),
-                                   ),
-                                   Padding(
-                                     padding: const EdgeInsets.only(top: 8,left: 12),
-                                     child: Text(feed.feed,style: TextStyle(color: Colors.white,fontSize: 20.sp),),
-                                   ),
-                                 ],
-                               ),
+                             GestureDetector(
+                               onLongPressUp: (){
+                                 showDialog(context: context,
+                                     builder: (context){
+                                   return Container(
+                                     height: 100.h,
+                                        child: AlertDialog(
+                                          backgroundColor: Colors.black,
+                                          title: Center(child: Text('MENU',style: TextStyle(color: primary),)),
+                                          content: InkWell(
+                                              onTap: (){
+                                                showDialog(context: context, builder:
+                                                (context){
+                                                  return Container(
+                                                    color: secondary,
+                                                    child:
+                                                      AlertDialog(
+                                                        backgroundColor: Colors.black,
+                                                        title: Center(child: Text('Are you sure?',style :TextStyle(color: primary))),
+                                                        actions: [
+                                                          Row(
+                                                            mainAxisAlignment: MainAxisAlignment.center,
+                                                            children: [
+                                                              TextButton(
+                                                                style: TextButton.styleFrom(
+                                                                  foregroundColor: primary
+                                                                ),
+                                                                onPressed: (){
+                                                                  print('tapped');
+                                                                  ref.read(feedProvider.notifier).removeFeed(feed);
+                                                                  Navigator.pop(context);
+                                                                },
+                                                                child: Text('Yes')),
+                                                            TextButton(
+                                                              style: TextButton.styleFrom(
+                                                                  foregroundColor: primary
+                                                              ),
+                                                              onPressed: (){
+                                                              Navigator.pop(context);
+                                                              }, child: Text('Cancel'),)
+                                                          ],
+                                                        )
+                                                      ],
+                                                        actionsAlignment: MainAxisAlignment.center,
+                                                    )
+                                                  );
 
+                                                }
+                                                );
+
+                                                },
+                                              child: Center(child: Text('Delete',style: TextStyle(color: primary),)))),
+
+
+                                   );
+                                 });
+                               },
+                               child: InkWell(
+                                 child: ListTile(
+                                   leading: Icon(Icons.person_pin_outlined,size: 40.h,color: primary,),
+                                   title: Column(
+                                     crossAxisAlignment: CrossAxisAlignment.start,
+                                     children: [
+                                       Padding(
+                                         padding: const EdgeInsets.only(top: 8.0,left: 8.0),
+                                         child: Row(
+                                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                           children: [
+                                             Text('User',style: TextStyle(color: primary,fontWeight: FontWeight.bold,fontSize: 25.sp)),
+                                             Text(formattedDate,style: TextStyle(color: primary))
+                                           ],
+                                         ),
+                                       ),
+                                       Padding(
+                                         padding: const EdgeInsets.only(top: 8,left: 12),
+                                         child: Text(feed.feed,style: TextStyle(color: Colors.white,fontSize: 20.sp),),
+                                       ),
+                                     ],
+                                   ),
+
+                                 ),
+                               ),
                              ),
                              Padding(
                                padding: const EdgeInsets.symmetric(vertical: 8.0,horizontal: 50),
