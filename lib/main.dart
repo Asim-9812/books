@@ -27,7 +27,11 @@ Future<void> getData () async {
 
 
 
-void main(){
+void main() async {
+
+  WidgetsFlutterBinding.ensureInitialized();
+  await Future.delayed(Duration(milliseconds: 50));
+
 
 
   getData();
@@ -46,6 +50,7 @@ class Home extends StatelessWidget {
       splitScreenMode: true,
       builder: (context, child) {
         return GetMaterialApp(
+          theme: ThemeData.dark(),
           debugShowCheckedModeBanner: false,
           home: child,
         );

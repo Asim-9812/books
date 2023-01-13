@@ -1,34 +1,48 @@
+
+
+// import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:sampleflutter/models/movie.dart';
+import 'package:sampleflutter/presentation/widget/tab_bar_widget.dart';
 
-import '../application/movie_notifier.dart';
+class Homepage extends ConsumerWidget {
 
-class Homepage extends StatelessWidget {
-  const Homepage({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        body: Consumer(
-            builder: (context, ref,child) {
-              final movieData = ref.watch(movieProvider);
-              if (movieData.isLoad){
-                return CircularProgressIndicator();
-              }
-              else if (movieData.errorMessage.isNotEmpty){
-                return Text(movieData.errorMessage);
-              }
-              else{
-                return Column(
-                  children: [
-                    Text(movieData.movies[0].title),
-                    Text(movieData.movies[0].overview)
-                  ],
-                );
-              }
+  Widget build(BuildContext context,ref) {
+    FlutterNativeSplash.remove();
+    return DefaultTabController(
+      length: 3,
+      child: Scaffold(
+        appBar: AppBar(
+          toolbarHeight: 50.h,
+          title: Text('Movies TMDB',),
+          actions: [
+            IconButton(onPressed: (){}, icon: Icon(Icons.search))
+          ],
 
-    }
-    )
+          bottom: TabBar(tabs:
+          [
+            Tab(text: 'Popular',),
+            Tab(text: 'Upcoming Movies',),
+            Tab(text: 'Top Rated',)
+          ]
+          ),
+        ),
+
+        body: TabBarView(
+            children: 
+            [
+              TabBarWidget(Categories.popular),
+              TabBarWidget(Categories.upcoming),
+              TabBarWidget(Categories.top_rated)
+            ]
+        ),
+
+      ),
     );
   }
 }

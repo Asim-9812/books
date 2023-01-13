@@ -1,6 +1,12 @@
 
 import 'dart:convert';
 
+enum Categories{
+  popular,
+  top_rated,
+  upcoming
+}
+
 class Movie{
 
   final String title;
@@ -25,12 +31,12 @@ class Movie{
 
   factory Movie.fromJson(Map<String,dynamic> json){
     return Movie(
-    id: json['id'],
-    title: json['title'],
-    backdrop_path: json['backdrop_path'],
-    overview: json['overview'],
-    poster_path: json['poster_path'],
-    release_date: json['release_date'],
+    id: json['id']??'',
+    title: json['title']??'',
+    backdrop_path: json['backdrop_path']??'',
+    overview: json['overview']??'',
+    poster_path: 'https://image.tmdb.org/t/p/w600_and_h900_bestv2${json['poster_path']}',
+    release_date: json['release_date']??'',
     vote_average: '${json['vote_average']}');
 
   }
