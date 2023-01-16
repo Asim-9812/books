@@ -6,4 +6,5 @@ class Api{
   static const popularMovies = '$baseUrl/movie/popular';
   static const topRatedMovies = '$baseUrl/movie/top_rated';
   static const upcomingMovies = '$baseUrl/movie/upcoming';
+  static const searchMovie= '$baseUrl/search/movie';
 }

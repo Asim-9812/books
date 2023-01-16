@@ -1,6 +1,8 @@
 
 
-import '../models/movie.dart';
+import 'movie.dart';
+
+
 
 class MovieState{
 
@@ -8,6 +10,7 @@ class MovieState{
   final List<Movie> popularMovies;
   final List<Movie> topRatedMovies;
   final List<Movie> upcomingMovies;
+  final List<Movie> searchMovies;
   final String errorMessage;
 
   MovieState({
@@ -15,19 +18,28 @@ class MovieState{
     required this.isLoad,
     required this.popularMovies,
     required this.topRatedMovies,
-    required this.upcomingMovies
-});
+    required this.upcomingMovies,
+    required this.searchMovies
+  });
 
-  MovieState copyWith({bool? isLoad,String? errorMessage, List<Movie>? popularMovies,List<Movie>? topRatedMovies, List<Movie>? upcomingMovies}){
+  MovieState copyWith({
+    bool? isLoad,
+    String? errorMessage,
+    List<Movie>? popularMovies,
+    List<Movie>? topRatedMovies,
+    List<Movie>? upcomingMovies,
+    List<Movie>? searchMovies
+  }) {
     return MovieState(
-        errorMessage: errorMessage ?? this.errorMessage,
+        errorMessage: errorMessage ??  this.errorMessage,
         isLoad: isLoad ?? this.isLoad,
         popularMovies: popularMovies ?? this.popularMovies,
         topRatedMovies: topRatedMovies ?? this.topRatedMovies,
-        upcomingMovies: upcomingMovies?? this.upcomingMovies
+        upcomingMovies: upcomingMovies ?? this.upcomingMovies,
+        searchMovies: searchMovies ?? this.searchMovies
     );
-
   }
 
-}
 
+
+}

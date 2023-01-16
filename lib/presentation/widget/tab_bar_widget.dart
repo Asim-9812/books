@@ -35,7 +35,7 @@ class TabBarWidget extends StatelessWidget {
                     children: [
                       CachedNetworkImage(
                         errorWidget: (c,s,d){
-                          return Icon(Icons.play_circle_outline,size: 20.h,);
+                          return Image.asset('assets/images/movie_icon.png');
                         },
                           imageUrl: data[index].poster_path,
                         placeholder: (c,s){
