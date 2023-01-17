@@ -4,7 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:sampleflutter/models/movie.dart';
+import 'package:sampleflutter/presentation/detailpage.dart';
 import 'package:sampleflutter/providers/movie_provider.dart';
 
 class TabBarWidget extends StatelessWidget {
@@ -31,27 +34,30 @@ class TabBarWidget extends StatelessWidget {
                     crossAxisSpacing: 5
                 ),
                     itemBuilder: (context,index){
-                    return Column(
-                    children: [
-                      CachedNetworkImage(
-                        errorWidget: (c,s,d){
-                          return Image.asset('assets/images/movie_icon.png');
-                        },
-                          imageUrl: data[index].poster_path,
-                        placeholder: (c,s){
-                            return Container(
-                              height: 120.h,
-                              child: Center(
-                                child: SpinKitFadingCube(
-                                  color: Colors.blue,
-                                  size: 20.h,
+                    return InkWell(
+                      onTap: ()=> Get.to(()=>DetailPage(data[index]),transition: Transition.leftToRight),
+                      child: Column(
+                      children: [
+                        CachedNetworkImage(
+                          errorWidget: (c,s,d){
+                            return Image.asset('assets/images/movie_icon.png');
+                          },
+                            imageUrl: data[index].poster_path,
+                          placeholder: (c,s){
+                              return Container(
+                                height: 120.h,
+                                child: Center(
+                                  child: SpinKitFadingCube(
+                                    color: Colors.blue,
+                                    size: 20.h,
+                                  ),
                                 ),
-                              ),
-                            );
-                        },
-                      ),
+                              );
+                          },
+                        ),
 
-                    ],
+                      ],
+                      ),
                     );
                 }),
               );
