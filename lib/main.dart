@@ -5,7 +5,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:sampleflutter/presentation/homepage.dart';
+import 'package:firebase_core/firebase_core.dart';
 
+import 'firebase_options.dart';
 
 
 final dio = Dio();
@@ -31,6 +33,10 @@ void main() async {
 
   WidgetsFlutterBinding.ensureInitialized();
   await Future.delayed(Duration(milliseconds: 50));
+
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
 
 
 

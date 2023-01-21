@@ -8,4 +8,5 @@ class Api{
   static const upcomingMovies = '$baseUrl/movie/upcoming';
   static const searchMovie= '$baseUrl/search/movie';
   static const getVideoId= '$baseUrl/movie';
+  static const recommended= '$baseUrl/movie';
 }
