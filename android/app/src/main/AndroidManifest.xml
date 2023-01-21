@@ -2,7 +2,7 @@
     package="com.example.sampleflutter">
     <uses-permission android:name="android.permission.INTERNET"/>
    <application
-        android:label="Movie TMDB"
+        android:label="FireChat"
         android:name="${applicationName}"
         android:icon="@mipmap/launcher_icon">
         <activity
