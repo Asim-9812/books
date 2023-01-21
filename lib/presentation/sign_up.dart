@@ -16,8 +16,9 @@ class SignUpPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: bgcolor,
       appBar: AppBar(
+        backgroundColor: Colors.black,
         automaticallyImplyLeading: false,
         title: Row(
           children: [
@@ -34,7 +35,7 @@ class SignUpPage extends StatelessWidget {
           // mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Sign Up',style: TextStyle(fontSize: 25.sp,color: Colors.black,fontWeight: FontWeight.bold),),
+            Text('Sign Up',style: TextStyle(fontSize: 25.sp,color: primary,fontWeight: FontWeight.bold),),
             SizedBox(
               height: 10.h,
             ),
@@ -56,7 +57,7 @@ class SignUpPage extends StatelessWidget {
 
                           // fillColor: Colors.black,
                           filled: true,
-                          hintText: 'Enter an username', hintStyle: TextStyle(color: Colors.black)
+                          hintText: 'Enter an username', hintStyle: TextStyle(color: Colors.grey)
                       )
                   ),
                   SizedBox(height: 5.h,),
@@ -74,7 +75,7 @@ class SignUpPage extends StatelessWidget {
 
                           // fillColor: Colors.black,
                           filled: true,
-                          hintText: 'Enter your E-MAIL', hintStyle: TextStyle(color: Colors.black)
+                          hintText: 'Enter your E-MAIL', hintStyle: TextStyle(color: Colors.grey)
                       )
                   ),
                   SizedBox(height: 5.h,),
@@ -91,7 +92,7 @@ class SignUpPage extends StatelessWidget {
                           ),
                           // fillColor: Colors.black,
                           filled: true,
-                          hintText: 'Enter a Password', hintStyle: TextStyle(color: Colors.black)
+                          hintText: 'Enter a Password', hintStyle: TextStyle(color: Colors.grey)
                       )
                   ),
                   Center(
@@ -105,7 +106,7 @@ class SignUpPage extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text('Already have an account,',style: TextStyle(color: Colors.black),),
+                      Text('Already have an account,',style: TextStyle(color: Colors.grey),),
                       TextButton(
                           style: TextButton.styleFrom(
                               foregroundColor: primary,

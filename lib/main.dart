@@ -10,26 +10,6 @@ import 'package:sampleflutter/presentation/login_page.dart';
 
 import 'firebase_options.dart';
 
-
-final dio = Dio();
-
-Future<void> getData () async {
-  
-  try{
-    
-    final response = await dio.get('https://api.themoviedb.org/3/movie/popular?api_key=2a0f926961d00c667e191a21c14461f8&page=1');
-    print(response.data);
-    
-  }on DioError catch(err){
-    print(err.message);
-    print(err.response);
-    
-  }
-  
-}
-
-
-
 void main() async {
 
   WidgetsFlutterBinding.ensureInitialized();
@@ -39,9 +19,6 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-
-
-  getData();
 
   runApp(ProviderScope(child: Home()));
 

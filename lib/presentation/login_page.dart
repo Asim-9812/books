@@ -14,8 +14,9 @@ class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: bgcolor,
       appBar: AppBar(
+        backgroundColor: Colors.black,
         automaticallyImplyLeading: false,
         title: Row(
           children: [
@@ -30,7 +31,7 @@ class LoginPage extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text('Login Page',style: TextStyle(fontSize: 25.sp,color: Colors.black,fontWeight: FontWeight.bold),),
+            Text('Login Page',style: TextStyle(fontSize: 25.sp,color: primary,fontWeight: FontWeight.bold),),
             SizedBox(
               height: 10.h,
             ),
@@ -61,7 +62,7 @@ class LoginPage extends StatelessWidget {
 
                               // fillColor: Colors.black,
                               filled: true,
-                              hintText: 'E-MAIL', hintStyle: TextStyle(color: Colors.black)
+                              hintText: 'E-MAIL', hintStyle: TextStyle(color: Colors.grey)
                           )
                         ),
                       ),
@@ -80,7 +81,7 @@ class LoginPage extends StatelessWidget {
                                 ),
                                 // fillColor: Colors.black,
                                 filled: true,
-                                hintText: 'Password', hintStyle: TextStyle(color: Colors.black)
+                                hintText: 'Password', hintStyle: TextStyle(color: Colors.grey)
                             )
                         ),
                       ),
@@ -100,7 +101,7 @@ class LoginPage extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text('Don\'t have an account,',style: TextStyle(color: Colors.black),),
+                Text('Don\'t have an account,',style: TextStyle(color: Colors.grey),),
                 TextButton(
                     style: TextButton.styleFrom(
                       foregroundColor: primary
