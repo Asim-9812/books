@@ -6,7 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:sampleflutter/presentation/homepage.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:sampleflutter/presentation/login_page.dart';
+import 'package:sampleflutter/presentation/auth_page.dart';
 
 import 'firebase_options.dart';
 
@@ -39,7 +39,7 @@ class Home extends StatelessWidget {
           home: child,
         );
       },
-      child: LoginPage(),
+      child: AuthPage(),
     );
   }
 }

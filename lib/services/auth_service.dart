@@ -1,12 +1,9 @@
 import 'dart:io';
 
 import 'package:dartz/dartz.dart';
-import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:sampleflutter/common/firebase_instances.dart';
-import '../api.dart';
-import '../exceptions/api_exception.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter_firebase_chat_core/flutter_firebase_chat_core.dart';
 
