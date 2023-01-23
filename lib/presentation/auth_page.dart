@@ -22,6 +22,8 @@ class AuthPage extends ConsumerWidget {
     ref.listen(authProvider, (previous, next) {
       if(next.errorMessage.isNotEmpty){
         SnackShow.showFailure(context, next.errorMessage);
+      }else if(next.isSuccess){
+        SnackShow.showSuccess(context, 'Success');
       }
     });
 
@@ -71,6 +73,15 @@ class AuthPage extends ConsumerWidget {
                           padding: const EdgeInsets.only(top: 20,left: 10,right: 10),
                           child: TextFormField(
                               controller: usernameController,
+                              validator:(val){
+                                if(val!.isEmpty){
+                                  return 'username is  required';
+                                }
+                                else if(val.length>20){
+                                  return 'maximum character exceeded';
+                                }
+                                return null;
+                              },
                               style: TextStyle(color: Colors.white),
                               decoration: InputDecoration(
                                   contentPadding: EdgeInsets.symmetric(horizontal: 10,vertical: 10),
@@ -91,6 +102,15 @@ class AuthPage extends ConsumerWidget {
                           padding: const EdgeInsets.only(top: 20,left: 10,right: 10,bottom: 8),
                           child: TextFormField(
                             controller: emailController,
+                              validator:(val){
+                                if(val!.isEmpty){
+                                  return 'e-mail is  required';
+                                }
+                                else if(!val.contains('@')){
+                                  return 'please enter valid email';
+                                }
+                                return null;
+                              },
                             style: TextStyle(color: Colors.white),
                             decoration: InputDecoration(
                                 contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
@@ -112,6 +132,15 @@ class AuthPage extends ConsumerWidget {
                           child: TextFormField(
                             obscureText: true,
                               controller: passwordController,
+                              validator:(val){
+                                if(val!.isEmpty){
+                                  return 'password is  required';
+                                }
+                                else if(val.length>20){
+                                  return 'maximum character exceeded';
+                                }
+                                return null;
+                              },
                               decoration: InputDecoration(
                                   contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                                   enabledBorder: OutlineInputBorder(),
@@ -160,6 +189,12 @@ class AuthPage extends ConsumerWidget {
                                 }else{
                                   if(image==null){
                                     SnackShow.showFailure(context, 'Please select an image');
+                                  }else{
+                                    ref.read(authProvider.notifier).userSignUp(
+                                        username: usernameController.text.trim(),
+                                        email: emailController.text.trim(),
+                                        password: passwordController.text.trim(),
+                                        image: image);
                                   }
                                 }
 
@@ -182,6 +217,7 @@ class AuthPage extends ConsumerWidget {
                         foregroundColor: primary
                       ),
                       onPressed: (){
+                        _form.currentState!.reset();
                         ref.read(loginProvider.notifier).change();
                       },
                       child: Text(isLogin? 'Create One':'Login',))
