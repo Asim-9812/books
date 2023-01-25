@@ -6,8 +6,7 @@ import '../services/auth_service.dart';
 
 
 final authStream = StreamProvider((ref) => FirebaseInstances.firebaseAuth.authStateChanges());
-
-
+final usersStream = StreamProvider((ref) => FirebaseInstances.firebaseChatCore.users());
 final authProvider = StateNotifierProvider<AuthNotifier, AuthState>((ref) => AuthNotifier(AuthState.empty()));
 
 class AuthNotifier extends StateNotifier<AuthState> {

@@ -17,7 +17,7 @@ class StatusPage extends ConsumerWidget {
             if(data == null){
               return AuthPage();
             }else{
-              return Homepage();
+              return HomePage();
             }
           },
           error: (err,stack)=> Text('$err'),

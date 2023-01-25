@@ -22,9 +22,8 @@ class AuthPage extends ConsumerWidget {
     ref.listen(authProvider, (previous, next) {
       if(next.errorMessage.isNotEmpty){
         SnackShow.showFailure(context, next.errorMessage);
-      }else if(next.isSuccess){
-        SnackShow.showSuccess(context, 'Success');
       }
+
     });
 
     final isLogin = ref.watch(loginProvider);
