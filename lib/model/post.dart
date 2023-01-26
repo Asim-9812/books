@@ -37,6 +37,14 @@ class Comment{
         comment: json['comment'],
         imageUrl: json['imageUrl']);
   }
+  Map<String,dynamic> toJson(){
+
+    return {
+      'comments' : this.comment,
+      'imageUrl' : this.imageUrl,
+      'username':this.username
+    };
+  }
 
 }
 

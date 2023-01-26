@@ -43,4 +43,22 @@ class CrudNotifier extends StateNotifier<CrudState> {
       state = state.copyWith(isLoad: false, errorMessage: '', isSuccess: true);
     });
   }
+
+  Future<void> addLike({
+    required List<String> usernames,
+    required int like,
+    required String postId
+  }) async {
+      state = state.copyWith(isLoad: true, errorMessage: '', isSuccess: false);
+      final response = await CrudService.addLike(
+          postId: postId,
+          usernames: [],
+          like: like);
+      response.fold((l) {
+        state = state.copyWith(isLoad: false, errorMessage: l, isSuccess: false);
+      }, (r) {
+        state = state.copyWith(isLoad: false, errorMessage: '', isSuccess: true);
+      });
+    }
+
 }
