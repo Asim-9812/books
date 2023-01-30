@@ -2,89 +2,94 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:sampleflutter/common/firebase_instances.dart';
-import 'package:sampleflutter/providers/auth_provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:get/get.dart';
-import 'package:sampleflutter/providers/crud_provider.dart';
-import 'package:sampleflutter/services/crud_service.dart';
-import '../common/snack_show.dart';
-import 'create_post.dart';
+import 'package:sampleflutter/presentation/recent_chat.dart';
+import 'package:sampleflutter/presentation/update_page.dart';
+import 'package:sampleflutter/presentation/user_detail.dart';
 
+import '../common/firebase_instances.dart';
+import '../common/snack_show.dart';
+import '../providers/auth_provider.dart';
+import '../providers/crud_provider.dart';
+import '../services/crud_service.dart';
+import 'create_post.dart';
+import 'detail_page.dart';
+import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 
 
 class HomePage extends ConsumerWidget {
-
   late String userName;
-
+  late types.User loginUser;
   final auth = FirebaseInstances.firebaseAuth.currentUser?.uid;
 
   @override
   Widget build(BuildContext context, ref) {
-
     FlutterNativeSplash.remove();
     final users = ref.watch(usersStream);
     final postData = ref.watch(postStream);
-    final user= ref.watch(userStream(auth!));
+    final user = ref.watch(userStream(auth!));
     return Scaffold(
         appBar: AppBar(
           title: Text('Sample Social'),
         ),
         drawer: Drawer(
-          child: user.when(
-              data: (data){
-                userName: data.firstName!;
-                return ListView(
-                  children: [
+            child: user.when(
+                data: (data){
+                  userName = data.firstName!;
+                  loginUser = data;
+                  return  ListView(
+                    children: [
+                      DrawerHeader(
+                          child: Row(
+                            children: [
+                              CircleAvatar(
+                                radius: 50,
+                                backgroundImage: NetworkImage(data.imageUrl!),
+                              ),
+                              SizedBox(width: 15,),
+                              Text(data.firstName!),
+                            ],
+                          )
+                      ),
 
-                    DrawerHeader(
-                        child: Row(
-                          children: [
-                            CircleAvatar(
-                              radius : 50,
-                              backgroundImage: NetworkImage(data.imageUrl!),
-                            ),
-                            SizedBox(
-                              width: 10.w,
-                            ),
-                            Text(data.firstName!)
-                          ],
-                        )
-                    ),
+                      ListTile(
+                        onTap: (){
+                          Navigator.of(context).pop();
+                        },
+                        leading: Icon(Icons.email),
+                        title: Text(data.metadata!['email']),
+                      ),
+                      ListTile(
+                        onTap: (){
+                          Navigator.of(context).pop();
+                          Get.to(() => RecentChat(), transition: Transition.leftToRight);
+                        },
+                        leading: Icon(Icons.message),
+                        title: Text('Recent Chats'),
+                      ),
+                      ListTile(
+                        onTap: (){
+                          Navigator.of(context).pop();
+                          Get.to(() => CreatePage(), transition: Transition.leftToRight);
+                        },
+                        leading: Icon(Icons.add),
+                        title: Text('Create Post'),
+                      ),
 
-                    ListTile(
-                      onTap: (){
-                        Navigator.of(context).pop();
-
-                      },
-                      leading: Icon(Icons.email),
-                      title: Text(data.metadata!['email']),
-                    ),
-
-                    ListTile(
-                      onTap: (){
-                        Navigator.of(context).pop();
-                        Get.to(() => CreatePage(), transition: Transition.leftToRight);
-                      },
-                      leading: Icon(Icons.add),
-                      title: Text('Create Post'),
-                    ),
-
-
-
-                    ListTile(
-                      onTap: (){
-                        ref.read(authProvider.notifier).userLogOut();
-                      },
-                      leading: Icon(Icons.exit_to_app),
-                      title: Text('Log Out'),
-                    )
-                  ],
-                );
-              },
-              error: (err,stack)=>Text('$err'),
-              loading: ()=>CircularProgressIndicator())
-
+                      ListTile(
+                        onTap: (){
+                          ref.read(authProvider.notifier).userLogOut();
+                        },
+                        leading: Icon(Icons.exit_to_app),
+                        title: Text('Log Out'),
+                      )
+                    ],
+                  );
+                },
+                error: (err, stack) => Text('$err'),
+                loading: () => Center(child: CircularProgressIndicator())
+            )
         ),
         body: Column(
           children: [
@@ -96,19 +101,24 @@ class HomePage extends ConsumerWidget {
                         scrollDirection: Axis.horizontal,
                         itemCount: data.length,
                         itemBuilder: (context, index){
-                          return Container(
-                            width: 100.w,
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Column(
-                                children: [
-                                  CircleAvatar(
-                                    radius: 50,
-                                    backgroundImage: CachedNetworkImageProvider(data[index].imageUrl!),
-                                  ),
-                                  SizedBox(height: 5,),
-                                  Text(data[index].firstName!, style: TextStyle(fontSize: 17.sp),)
-                                ],
+                          return InkWell(
+                            onTap: (){
+                              Get.to(() => UserDetail(data[index]), transition: Transition.leftToRight);
+                            },
+                            child: Container(
+                              width: 100.w,
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Column(
+                                  children: [
+                                    CircleAvatar(
+                                      radius: 50,
+                                      backgroundImage: CachedNetworkImageProvider(data[index].imageUrl!),
+                                    ),
+                                    SizedBox(height: 5,),
+                                    Text(data[index].firstName!, style: TextStyle(fontSize: 17.sp),)
+                                  ],
+                                ),
                               ),
                             ),
                           );
@@ -124,54 +134,74 @@ class HomePage extends ConsumerWidget {
                 child: postData.when(
                     data: (data){
                       return ListView.builder(
-                        itemCount: data.length,
-                          itemBuilder: (context , index){
+                          itemCount: data.length,
+                          itemBuilder: (context, index){
                             final post = data[index];
-                            return Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Card(
-                                child: Column(
-                                  children: [
-                                    Row(
+                            return  Card(
+                              child: Column(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                                    child: Row(
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
                                         Text(post.title),
-                                       if(auth == post.userId) IconButton(
-                                            onPressed: (){},
-                                            icon: Icon(Icons.more_horiz))
+                                        if(auth == post.userId)  IconButton(onPressed: (){
+                                          Get.defaultDialog(
+                                              title: 'Customize Post',
+                                              content: Text('Edit or remove post'),
+                                              actions: [
+                                                IconButton(
+                                                    onPressed: (){
+                                                      Navigator.of(context).pop();
+                                                      Get.to(() => UpdatePage(post));
+                                                    }, icon: Icon(Icons.edit)),
+                                                IconButton(onPressed: (){}, icon: Icon(Icons.delete)),
+                                              ]
+                                          );
+                                        }, icon: Icon(Icons.more_horiz))
                                       ],
                                     ),
-                                    Image.network(post.imageUrl),
-                                    if(auth != post.userId) Row(
+                                  ),
+                                  InkWell(
+                                      onTap:(){
+                                        Get.to(() => DetailPage(post, loginUser), transition: Transition.leftToRight);
+                                      },
+                                      child: Image.network(post.imageUrl)),
+                                  if(auth != post.userId)    Padding(
+                                    padding: const EdgeInsets.only(right: 10),
+                                    child: Row(
                                       mainAxisAlignment: MainAxisAlignment.start,
                                       children: [
                                         IconButton(
                                             onPressed: (){
                                               if(post.like.usernames.contains(userName)){
-                                                SnackShow.showFailure(context, 'message');
-                                              }
-                                              else{
+                                                SnackShow.showFailure(context, 'You have already like this post');
+                                              }else{
                                                 post.like.usernames.add(userName);
                                                 ref.read(crudProvider.notifier).addLike(
-                                                    usernames: post.like.usernames,
+                                                    username: post.like.usernames,
                                                     like: post.like.likes,
-                                                    postId: post.id);
+                                                    postId: post.id
+                                                );
                                               }
+                                            }, icon: Icon(Icons.thumb_up)),
+                                        if(post.like.likes != 0)    Text('${post.like.likes}')
 
-
-                                            },
-                                            icon: Icon(Icons.thumb_up_outlined)),
-                                        if(post.like.likes!=0) Text('${post.like.likes}')
                                       ],
-                                    )
-                                  ],
-                                ),
+                                    ),
+                                  )
+                                ],
                               ),
                             );
-                          });
+                          }
+                      );
                     },
-                    error: (err, stack)=> Text('$err'),
-                    loading: ()=>Center(child: CircularProgressIndicator())))
+                    error: (err, stack) => Text('$err'),
+                    loading: () => Center(child: CircularProgressIndicator())
+                )
+            )
+
           ],
         )
     );

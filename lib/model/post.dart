@@ -23,30 +23,29 @@ class Comment{
   final String comment;
   final String imageUrl;
 
-  Comment({
-
-    required this.username,
-    required this.comment,
-    required this.imageUrl
-
-});
+  Comment({required this.imageUrl, required this.username, required this.comment});
 
   factory Comment.fromJson(Map<String, dynamic> json){
-    return Comment(
-        username: json['username'],
-        comment: json['comment'],
-        imageUrl: json['imageUrl']);
+    return  Comment(
+        comment:  json['comment'],
+        imageUrl: json['imageUrl'],
+        username: json['username']
+    );
   }
-  Map<String,dynamic> toJson(){
 
+
+  Map<String, dynamic> toJson(){
     return {
-      'comments' : this.comment,
-      'imageUrl' : this.imageUrl,
-      'username':this.username
+      'comment': this.comment,
+      'imageUrl': this.imageUrl,
+      'username': this.username
     };
   }
 
+
 }
+
+
 
 class Post{
   final String id;
@@ -56,6 +55,7 @@ class Post{
   final String userId;
   final Like like;
   final List<Comment> comments;
+  final String imageId;
 
   Post({
     required this.imageUrl,
@@ -64,7 +64,8 @@ class Post{
     required this.detail,
     required this.title,
     required this.id,
-    required this.comments
+    required this.comments,
+    required this.imageId
   });
 
 
