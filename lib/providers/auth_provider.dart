@@ -1,30 +1,7 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:sampleflutter/common/firebase_instances.dart';
 import '../model/auth_state.dart';
 import '../services/auth_service.dart';
-import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 
-
-final authStream = StreamProvider.autoDispose((ref) => FirebaseInstances.firebaseAuth.authStateChanges());
-final usersStream = StreamProvider.autoDispose((ref) => FirebaseInstances.firebaseChatCore.users());
-final userStream = StreamProvider.family.autoDispose((ref, String userId) {
-  CollectionReference  users = FirebaseInstances.fireStore.collection('users');
-  return  users.doc(userId).snapshots().map((e) {
-    final data = e.data() as Map<String, dynamic>;
-
-    return types.User(
-        id: e.id,
-        imageUrl: data['imageUrl'],
-        firstName: data['firstName'],
-        metadata: {
-          'email': data['metadata']['email'],
-          'token':data['metadata']['token']
-        }
-    );
-  });
-});
 final authProvider = StateNotifierProvider<AuthNotifier, AuthState>((ref) => AuthNotifier(AuthState.empty()));
 
 class AuthNotifier extends StateNotifier<AuthState> {
@@ -35,10 +12,9 @@ class AuthNotifier extends StateNotifier<AuthState> {
     required String username,
     required String email,
     required String password,
-    required XFile image
   }) async {
     state = state.copyWith(isLoad: true, errorMessage: '', isSuccess: false);
-    final response = await AuthService.userSignUp(username: username, email: email, password: password, image: image);
+    final response = await AuthService.userSignUp(username: username, email: email, password: password, );
     response.fold((l) {
       state = state.copyWith(isLoad: false, errorMessage: l, isSuccess: false);
     }, (r) {
@@ -64,14 +40,9 @@ class AuthNotifier extends StateNotifier<AuthState> {
 
 
 
-  Future<void> userLogOut() async {
+  void userLogOut()  {
     state = state.copyWith(isLoad: true, errorMessage: '', isSuccess: false);
-    final response = await AuthService.userLogOut();
-    response.fold((l) {
-      state = state.copyWith(isLoad: false, errorMessage: l, isSuccess: false);
-    }, (r) {
-      state = state.copyWith(isLoad: false, errorMessage: '', isSuccess: true);
-    });
+
   }
 
 

@@ -1,33 +1,39 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:sampleflutter/common/snack_show.dart';
 import 'package:sampleflutter/constant/colors.dart';
-import 'package:sampleflutter/providers/auth_provider.dart';
+import 'package:sampleflutter/presentation/sign_up.dart';
+import '../providers/auth_provider.dart';
 import '../providers/toggle_provider.dart';
 
-class AuthPage extends ConsumerWidget {
+class LoginPage extends ConsumerStatefulWidget {
 
-  final usernameController = TextEditingController();
+  @override
+  ConsumerState<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends ConsumerState<LoginPage> {
   final emailController = TextEditingController();
-  final passwordController = TextEditingController();
 
+  final passwordController = TextEditingController();
 
   final _form = GlobalKey<FormState>();
 
   @override
-  Widget build(BuildContext context,ref) {
+  Widget build(BuildContext context) {
 
     ref.listen(authProvider, (previous, next) {
       if(next.errorMessage.isNotEmpty){
         SnackShow.showFailure(context, next.errorMessage);
+      }else{
+        SnackShow.showSuccess(context, 'Success');
       }
 
     });
 
-    final isLogin = ref.watch(loginProvider);
-    final image=ref.watch(imageProvider);
+
     final auth =ref.watch(authProvider);
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -39,7 +45,7 @@ class AuthPage extends ConsumerWidget {
           children: [
             Icon(Icons.fireplace_rounded,color: Color(0xFFFFFCB2B),),
             SizedBox(width: 10.w,),
-            Text('FireChat',style: TextStyle(fontSize: 25.sp, color: Color(0xFFFFFCB2B) ),),
+            Text('Sample Shop',style: TextStyle(fontSize: 25.sp, color: Color(0xFFFFFCB2B) ),),
           ],
         ),
       ),
@@ -51,9 +57,10 @@ class AuthPage extends ConsumerWidget {
         return Form(
           key: _form,
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(isLogin? 'Login Page':'Sign Up',style: TextStyle(fontSize: 25.sp,color: primary,fontWeight: FontWeight.bold),),
+              Text('Login Page',style: TextStyle(fontSize: 25.sp,color: primary,fontWeight: FontWeight.bold),),
               SizedBox(
                 height: 10.h,
               ),
@@ -68,35 +75,6 @@ class AuthPage extends ConsumerWidget {
                     width: 250.w,
                     child: Column(
                       children: [
-                        if (!isLogin) Padding(
-                          padding: const EdgeInsets.only(top: 20,left: 10,right: 10),
-                          child: TextFormField(
-                              controller: usernameController,
-                              validator:(val){
-                                if(val!.isEmpty){
-                                  return 'username is  required';
-                                }
-                                else if(val.length>20){
-                                  return 'maximum character exceeded';
-                                }
-                                return null;
-                              },
-                              style: TextStyle(color: Colors.white),
-                              decoration: InputDecoration(
-                                  contentPadding: EdgeInsets.symmetric(horizontal: 10,vertical: 10),
-                                  enabledBorder: OutlineInputBorder(),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: Colors.black,
-                                    ),
-                                  ),
-
-                                  // fillColor: Colors.black,
-                                  filled: true,
-                                  hintText: 'Enter an username', hintStyle: TextStyle(color: Colors.grey)
-                              )
-                          ),
-                        ),
                         Padding(
                           padding: const EdgeInsets.only(top: 20,left: 10,right: 10,bottom: 8),
                           child: TextFormField(
@@ -158,20 +136,6 @@ class AuthPage extends ConsumerWidget {
                           height: 10.h,
                         ),
 
-                        if(!isLogin)
-                          InkWell(
-                          onTap: (){
-                            ref.read(imageProvider.notifier).pickAnImage();
-                          },
-                          child: Container(
-                            color: Colors.white12,
-                            padding: EdgeInsets.symmetric(vertical: 10,horizontal: 10),
-                            height: 150.h,
-                            width: 220.w,
-                            child: image == null  ? Center(child: Text('select an image',style: TextStyle(color: Colors.black),),): Image.file(File(image.path)),
-                          ),
-                        ),
-
                         TextButton(
                             style: TextButton.styleFrom(
                               foregroundColor: primary
@@ -181,25 +145,18 @@ class AuthPage extends ConsumerWidget {
                               FocusScope.of(context).unfocus();
                               if(_form.currentState!.validate()){
 
-                                if(isLogin){
+
                                   ref.read(authProvider.notifier).userLogin(
                                       email: emailController.text.trim(),
                                       password: passwordController.text.trim());
-                                }else{
-                                  if(image==null){
-                                    SnackShow.showFailure(context, 'Please select an image');
-                                  }else{
-                                    ref.read(authProvider.notifier).userSignUp(
-                                        username: usernameController.text.trim(),
-                                        email: emailController.text.trim(),
-                                        password: passwordController.text.trim(),
-                                        image: image);
-                                  }
+
                                 }
 
-                              }
+
                             },
-                            child: auth.isLoad? Center(child: CircularProgressIndicator(),) : Text(isLogin? 'Login': 'Sign Up',style: TextStyle(fontSize: 20.sp),))
+                            child:
+                            auth.isLoad? Center(child: CircularProgressIndicator(),) :
+                            Text('Login',style: TextStyle(fontSize: 20.sp),))
                       ],
                     ),
                   ),
@@ -210,18 +167,20 @@ class AuthPage extends ConsumerWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(isLogin? 'Don\'t have an account?' : 'Already have an account?',style: TextStyle(color: Colors.grey),),
+                  Text('Don\'t have an account?' ,style: TextStyle(color: Colors.grey),),
                   TextButton(
                       style: TextButton.styleFrom(
-                        foregroundColor: primary
+                          foregroundColor: primary
                       ),
                       onPressed: (){
-                        _form.currentState!.reset();
-                        ref.read(loginProvider.notifier).change();
+                        //_form.currentState!.reset();
+                        Get.to(()=>SignUpPage(),transition:Transition.leftToRight);
+
                       },
-                      child: Text(isLogin? 'Create One':'Login',))
+                      child: Text('Sign Up',))
                 ],
               )
+
 
             ],
 
