@@ -3,9 +3,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:sampleflutter/model/user.dart';
 import 'package:sampleflutter/presentation/login_page.dart';
 import 'package:sampleflutter/presentation/status_page.dart';
 
+
+
+final box=Provider<String?>((ref) => null);
 
 
 void main() async {
@@ -14,12 +18,19 @@ void main() async {
   await Future.delayed(Duration(milliseconds: 50));
 
   await Hive.initFlutter();
+  
 
-  final userBox = await Hive.box<String>('user');
+  final userBox = await Hive.openBox('user');
+  
+  
 
 
 
-  runApp(ProviderScope(child: Home()));
+  runApp(ProviderScope(
+      overrides: [
+        box.overrideWithValue(userBox.get('userData'))
+      ],
+      child: Home()));
 
 }
 
@@ -41,7 +52,7 @@ class Home extends StatelessWidget {
           home: child,
         );
       },
-      child: LoginPage(),
+      child: StatusPage(),
     );
   }
 }

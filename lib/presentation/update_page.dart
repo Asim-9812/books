@@ -5,10 +5,7 @@
 // import 'package:flutter_screenutil/flutter_screenutil.dart';
 // import 'package:get/get.dart';
 // import 'package:sampleflutter/constant/colors.dart';
-//
-// import '../common/firebase_instances.dart';
 // import '../common/snack_show.dart';
-// import '../model/post.dart';
 // import '../providers/crud_provider.dart';
 // import '../providers/toggle_provider.dart';
 //

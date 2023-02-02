@@ -5,6 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 import '../api.dart';
+import '../model/user.dart';
 
 class AuthService {
 
@@ -28,7 +29,7 @@ class AuthService {
     }
   }
 
-  static Future<Either<String, bool>> userLogin({
+  static Future<Either<String, User>> userLogin({
     required String email,
     required String password}) async {
     try {
@@ -39,7 +40,7 @@ class AuthService {
 
       final box = Hive.box<String>('user');
       box.put('userData', jsonEncode(response.data));
-      return Right(true);
+      return Right(User.fromJson(response.data));
     } on DioError catch (err) {
       return Left(err.message);
     }

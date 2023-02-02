@@ -1,8 +1,22 @@
+import 'dart:convert';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hive/hive.dart';
+import 'package:sampleflutter/main.dart';
+import 'package:sampleflutter/model/user.dart';
 import '../model/auth_state.dart';
 import '../services/auth_service.dart';
 
-final authProvider = StateNotifierProvider<AuthNotifier, AuthState>((ref) => AuthNotifier(AuthState.empty()));
+final authProvider = StateNotifierProvider<AuthNotifier, AuthState>((ref) {
+  final userBox = ref.watch(box);
+  return AuthNotifier(AuthState(
+      errorMessage: '',
+      isSuccess: false,
+      isLoad: false,
+      user: userBox == null ? null: User.fromJson(
+          jsonDecode(userBox))
+  ));
+});
 
 class AuthNotifier extends StateNotifier<AuthState> {
   AuthNotifier(super.state);
@@ -34,14 +48,16 @@ class AuthNotifier extends StateNotifier<AuthState> {
     response.fold((l) {
       state = state.copyWith(isLoad: false, errorMessage: l, isSuccess: false);
     }, (r) {
-      state = state.copyWith(isLoad: false, errorMessage: '', isSuccess: true);
+      state = state.copyWith(isLoad: false, errorMessage: '', isSuccess: true,user: r);
     });
   }
 
 
 
   void userLogOut()  {
-    state = state.copyWith(isLoad: true, errorMessage: '', isSuccess: false);
+    final box = Hive.box<String>('user');
+    box.clear();
+    state = state.copyWith(user: null);
 
   }
 

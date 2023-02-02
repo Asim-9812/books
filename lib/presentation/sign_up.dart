@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:sampleflutter/common/snack_show.dart';
 import 'package:sampleflutter/constant/colors.dart';
+import '../providers/auth_provider.dart';
 import '../providers/toggle_provider.dart';
 import 'login_page.dart';
 
@@ -19,15 +20,17 @@ class SignUpPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context,ref) {
 
-    // ref.listen(authProvider, (previous, next) {
-    //   if(next.errorMessage.isNotEmpty){
-    //     SnackShow.showFailure(context, next.errorMessage);
-    //   }
-    //
-    // });
+    ref.listen(authProvider, (previous, next) {
+      if(next.errorMessage.isNotEmpty){
+        SnackShow.showFailure(context, next.errorMessage);
+      }else if(next.isSuccess){
+        Get.back();
+      }
+
+    });
 
     final isLogin = ref.watch(loginProvider);
-  //  final auth =ref.watch(authProvider);
+   final auth =ref.watch(authProvider);
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: bgcolor,
@@ -169,10 +172,10 @@ class SignUpPage extends ConsumerWidget {
                               if(_form.currentState!.validate()){
 
 
-                                  // ref.read(authProvider.notifier).userLogin(
-                                  //     email: emailController.text.trim(),
-                                  //     password: passwordController.text.trim());
-                                  //
+                                  ref.read(authProvider.notifier).userLogin(
+                                      email: emailController.text.trim(),
+                                      password: passwordController.text.trim());
+
 
 
                               }
