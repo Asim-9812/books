@@ -72,21 +72,20 @@ class CrudService {
   }) async {
     try {
       if (image == null) {
-        await dio.post(Api.updateProduct, data: {
+        await dio.patch('${Api.updateProduct}/${postId}', data: {
           'photo': 'no need',
           'product_name': title,
           'product_detail': detail,
           'price': price,
-        });
+        }, options: Options(
+            headers: {HttpHeaders.authorizationHeader: 'Bearer $token'}));
       } else {
-        final cloudinary =
-        CloudinaryPublic('dfy0efdds', 'sampleshop', cache: false);
+        final cloudinary = CloudinaryPublic('dfy0efdds', 'sampleshop', cache: false);
         CloudinaryResponse response = await cloudinary.uploadFile(
           CloudinaryFile.fromFile(image.path,
               resourceType: CloudinaryResourceType.Image),
         );
-
-        await dio.post('${Api.updateProduct}/${postId}',
+        await dio.patch('${Api.updateProduct}/${postId}',
             data: {
               'product_name': title,
               'product_detail': detail,
@@ -96,7 +95,8 @@ class CrudService {
               'photo': response.secureUrl
             },
             options: Options(
-                headers: {HttpHeaders.authorizationHeader: 'Bearer $token'}));
+                headers: {HttpHeaders.authorizationHeader: 'Bearer $token'})
+        );
       }
       return Right(true);
     } on DioError catch (err) {
@@ -107,9 +107,10 @@ class CrudService {
   static Future<Either<String, bool>> delProduct(
       {required String postId,
         required String imageId,
-        required String token}) async {
+        required String token
+      }) async {
     try {
-      await dio.delete('${Api.removeProduct}/${postId}',
+      await dio.delete('${Api.removeProduct}/$postId',
           data: {
             'public_id': imageId,
           },

@@ -1,35 +1,55 @@
-
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:sampleflutter/constant/colors.dart';
 import '../common/snack_show.dart';
+import '../model/product.dart';
 import '../providers/auth_provider.dart';
-import 'login_page.dart';
+import '../providers/crud_provider.dart';
+import '../providers/toggle_provider.dart';
+import '../services/crud_service.dart';
 
 
 
-class SignUpPage extends  ConsumerWidget {
+class EditPage extends  ConsumerStatefulWidget {
+  final Product product;
+  EditPage(this.product);
 
-  final usernameController = TextEditingController();
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
+  @override
+  ConsumerState<EditPage> createState() => _EditPageState();
+}
 
+class _EditPageState extends ConsumerState<EditPage> {
+  TextEditingController titleController = TextEditingController();
+  TextEditingController detailController = TextEditingController();
+  TextEditingController priceController = TextEditingController();
   final _form = GlobalKey<FormState>();
 
   @override
-  Widget build(BuildContext context, ref) {
+  void initState() {
+    titleController..text = widget.product.product_name;
+    detailController..text = widget.product.product_detail;
+    priceController..text = widget.product.price.toString();
+    super.initState();
+  }
 
-    ref.listen(authProvider, (previous, next) {
+  @override
+  Widget build(BuildContext context) {
+
+    ref.listen(crudProvider, (previous, next) {
       if(next.errorMessage.isNotEmpty){
         SnackShow.showFailure(context, next.errorMessage);
       }else if(next.isSuccess){
-        SnackShow.showSuccess(context, 'successfully register');
+        ref.refresh(products);
+        SnackShow.showSuccess(context, 'succesfully updated');
         Get.back();
       }
     });
 
+    final image = ref.watch(imageProvider);
+    final crud = ref.watch(crudProvider);
     final auth = ref.watch(authProvider);
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -41,13 +61,13 @@ class SignUpPage extends  ConsumerWidget {
           children: [
             Icon(Icons.fireplace_rounded,color: Color(0xFFFFFCB2B),),
             SizedBox(width: 10.w,),
-            Text('Sample Shop',style: TextStyle(fontSize: 25.sp, color: Color(0xFFFFFCB2B) ),),
+            Text('FireChat',style: TextStyle(fontSize: 25.sp, color: Color(0xFFFFFCB2B) ),),
           ],
         ),
       ),
 
       body:  Padding(
-        padding: const EdgeInsets.only(top: 120),
+        padding:  EdgeInsets.only(top: 70.h),
         child: Form(
           key: _form,
           child: Container(
@@ -55,7 +75,7 @@ class SignUpPage extends  ConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text('SignUp Page', style: TextStyle(fontSize: 25.sp,
+                Text('Create Page', style: TextStyle(fontSize: 25.sp,
                     color: primary,
                     fontWeight: FontWeight.bold),),
                 SizedBox(
@@ -71,47 +91,15 @@ class SignUpPage extends  ConsumerWidget {
                     width: 250.w,
                     child: Column(
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.only(
-                              top: 20, left: 10, right: 10, bottom: 8),
-                          child: TextFormField(
-                              controller: usernameController,
-                              validator: (val){
-                                if(val!.isEmpty){
-                                  return 'username is required';
-                                }else if(val.length > 20){
-                                  return 'minimum character exceed';
-                                }
-                                return null;
-                              },
-                              style: TextStyle(color: Colors.white),
-                              decoration: InputDecoration(
-                                  contentPadding: EdgeInsets.symmetric(
-                                      horizontal: 10),
-                                  enabledBorder: OutlineInputBorder(),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: Colors.black,
-                                    ),
-                                  ),
 
-                                  // fillColor: Colors.black,
-                                  filled: true,
-                                  hintText: 'Enter an username',
-                                  hintStyle: TextStyle(color: Colors.grey)
-                              )
-                          ),
-                        ),
                         Padding(
                           padding: const EdgeInsets.only(
                               top: 20, left: 10, right: 10, bottom: 8),
                           child: TextFormField(
-                              controller: emailController,
+                              controller: titleController,
                               validator: (val){
                                 if(val!.isEmpty){
-                                  return 'email is required';
-                                }else if(!val.contains('@')){
-                                  return 'please enter valid email';
+                                  return 'title is required';
                                 }
                                 return null;
                               },
@@ -128,7 +116,7 @@ class SignUpPage extends  ConsumerWidget {
 
                                   // fillColor: Colors.black,
                                   filled: true,
-                                  hintText: 'E-MAIL',
+                                  hintText: 'Title',
                                   hintStyle: TextStyle(color: Colors.grey)
                               )
                           ),
@@ -139,14 +127,13 @@ class SignUpPage extends  ConsumerWidget {
                           child: TextFormField(
                               validator: (val){
                                 if(val!.isEmpty){
-                                  return 'password is required';
-                                }else if(val.length > 30){
+                                  return 'detail is required';
+                                }else if(val.length > 500){
                                   return 'minimum character exceed';
                                 }
                                 return null;
                               },
-                              obscureText: true,
-                              controller: passwordController,
+                              controller: detailController,
                               decoration: InputDecoration(
                                   contentPadding: EdgeInsets.symmetric(
                                       vertical: 10, horizontal: 10),
@@ -158,9 +145,53 @@ class SignUpPage extends  ConsumerWidget {
                                   ),
                                   // fillColor: Colors.black,
                                   filled: true,
-                                  hintText: 'Password',
+                                  hintText: 'Detail',
                                   hintStyle: TextStyle(color: Colors.grey)
                               )
+                          ),
+                        ),
+
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              top: 10, left: 10, right: 10, bottom: 8),
+                          child: TextFormField(
+                              keyboardType: TextInputType.number,
+                              validator: (val){
+                                if(val!.isEmpty){
+                                  return 'price is required';
+                                }else if(val.length > 50){
+                                  return 'minimum character exceed';
+                                }
+                                return null;
+                              },
+                              controller: priceController,
+                              decoration: InputDecoration(
+                                  contentPadding: EdgeInsets.symmetric(
+                                      vertical: 10, horizontal: 10),
+                                  enabledBorder: OutlineInputBorder(),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                  // fillColor: Colors.black,
+                                  filled: true,
+                                  hintText: 'Price',
+                                  hintStyle: TextStyle(color: Colors.grey)
+                              )
+                          ),
+                        ),
+
+                        InkWell(
+                          onTap: (){
+                            ref.read(imageProvider.notifier).pickAnImage();
+                          },
+                          child: Container(
+                            margin: EdgeInsets.symmetric(vertical: 15),
+                            height: 150.h,
+                            width: 250.w,
+                            color: Colors.white,
+                            child: image == null ? Image.network(widget.product.image) : Image.file(File(image.path)),
                           ),
                         ),
 
@@ -174,36 +205,41 @@ class SignUpPage extends  ConsumerWidget {
                               FocusScope.of(context).unfocus();
                               if(_form.currentState!.validate()){
 
-                                ref.read(authProvider.notifier).userSignUp(
-                                  username: usernameController.text.trim(),
-                                  email: emailController.text.trim(),
-                                  password: passwordController.text.trim(),
-                                );
+                                if(image == null){
+                                  ref.read(crudProvider.notifier).updateProduct(
+                                    title: titleController.text.trim(),
+                                    detail: detailController.text.trim(),
+                                    price: int.parse(priceController.text.trim()),
+                                    postId: widget.product.productId,
+                                    token: auth.user!.token,
+                                  );
+                                }else{
+                                  ref.read(crudProvider.notifier).updateProduct(
+                                      title: titleController.text.trim(),
+                                      detail: detailController.text.trim(),
+                                      price: int.parse(priceController.text.trim()),
+                                      postId: widget.product.productId,
+                                      token: auth.user!.token,
+                                      image: image,
+                                      imageId: widget.product.public_id
+                                  );
+
+                                }
 
 
                               }
 
 
+
                             },
-                            child: auth.isLoad ? Center(child: CircularProgressIndicator(
+                            child:crud.isLoad ? Center(child: CircularProgressIndicator(
                               color: Colors.white,
-                            )):
-                            Text('SignUP', style: TextStyle(fontSize: 20.sp),)),
-                        SizedBox(height: 20,),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text('Already have an account'),
-                            TextButton(onPressed: (){
-                              // _form.currentState!.reset();
-                              Get.back();
-                            }, child: Text('Login'))
-                          ],
-                        )
+                            )): Text('Submit', style: TextStyle(fontSize: 20.sp),))
                       ],
                     ),
                   ),
                 ),
+
 
               ],
 

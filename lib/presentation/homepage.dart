@@ -1,7 +1,9 @@
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:sampleflutter/presentation/crud_page.dart';
 import 'package:sampleflutter/providers/auth_provider.dart';
 import 'package:sampleflutter/services/crud_service.dart';
 
@@ -48,7 +50,16 @@ class HomePage extends ConsumerWidget {
                   },
                   leading: Icon(Icons.exit_to_app),
                   title: Text('Log Out'),
-                )
+                ),
+
+                ListTile(
+                  onTap: (){
+                    Navigator.of(context).pop();
+                    Get.to(() => CrudPage(), transition: Transition.leftToRight);
+                  },
+                  leading: Icon(Icons.add),
+                  title: Text('Customize Product'),
+                ),
               ],
             )
 
@@ -59,13 +70,28 @@ class HomePage extends ConsumerWidget {
                 return GridView.builder(
                   itemCount: data.length,
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
+                      crossAxisCount: 3,
                       mainAxisSpacing: 5,
                       crossAxisSpacing: 5,
                       childAspectRatio: 2/3
                   ),
                   itemBuilder: (context, index){
-                    return Image.network(data[index].image);
+                    return GridTile(
+                        child: Image.network(data[index].image,fit: BoxFit.cover,),
+                        footer: Container(
+                          height: 50.h,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text('Rs.${data[index].price}'),
+                              SizedBox(
+                                height: 10.h,
+                              ),
+                              Text(data[index].product_name),
+                            ],
+                          ),
+                        ),
+                    );
                   },
                 );
               },
